@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++17 -O2 -Wall -Wextra
+CXXFLAGS=-std=c++17 -O2 -Wall -Wextra -I ../include
 #-fsanitize=address -pedantic
 #LDFLAGS=-fsanitize=address
 LIBFLAGS=-lm
@@ -18,6 +18,9 @@ EXEC=main.out
 SRC := $(wildcard $(SRC_DIR)/*/*.cpp $(SRC_DIR)/*.cpp)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
 
+debug: CXXFLAGS += -g -DDEBUG_BUILD
+debug: $(EXEC)
+
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
@@ -29,3 +32,6 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 clean:
 	rm $(EXEC) $(OBJ)
+
+run: $(EXEC)
+	./$(EXEC)

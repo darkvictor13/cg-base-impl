@@ -1,6 +1,6 @@
 #include "draw_panel.hpp"
 
-#include <iostream>
+#include "debug.hpp"
 
 BEGIN_EVENT_TABLE(DrawPanel, wxPanel)
 EVT_PAINT(DrawPanel::paintEvent)
@@ -8,19 +8,19 @@ EVT_SIZE(DrawPanel::sizeEvent)
 END_EVENT_TABLE()
 
 void DrawPanel::paintEvent(wxPaintEvent& evt) {
-    std::cout << "paintEvent" << std::endl;
+    DEBUG("paintEvent");
     wxPaintDC dc(this);
     render(dc);
 }
 
 void DrawPanel::sizeEvent(wxSizeEvent& evt) {
-    std::cout << "sizeEvent" << std::endl;
+    DEBUG("sizeEvent");
     evt.Skip();
 }
 
 void DrawPanel::render(wxDC& dc) {
     int new_width, new_height;
-    std::cout << "render" << std::endl;
+    DEBUG("render");
 
     dc.GetSize(&new_width, &new_height);
     if (new_width != width || new_height != height) {
@@ -36,7 +36,7 @@ void DrawPanel::render(wxDC& dc) {
 }
 
 void DrawPanel::myDraw(wxDC& dc) {
-    std::cout << "myDraw" << std::endl;
+    DEBUG("myDraw");
 
     const int mid_x = width / 2;
     const int one_third_y = height / 3;
@@ -80,33 +80,33 @@ void DrawPanel::myDraw(wxDC& dc) {
 }
 
 void DrawPanel::clear(wxDC& dc) {
-    std::cout << "clear" << std::endl;
+    DEBUG("clear");
     // dc.SetBackground(*wxWHITE_BRUSH);
     dc.Clear();
 }
 
 DrawPanel::DrawPanel(wxFrame* parent) : wxPanel(parent), shouldDraw(false) {
-    std::cout << "DrawPanel constructor" << std::endl;
+    DEBUG("DrawPanel");
 }
 
 void DrawPanel::paintNow() {
-    std::cout << "paintNow" << std::endl;
+    DEBUG("paintNow");
     wxClientDC dc(this);
     render(dc);
 }
 
 void DrawPanel::drawNow() {
-    std::cout << "drawNow" << std::endl;
+    DEBUG("drawNow");
     shouldDraw = true;
     paintNow();
 }
 
 void DrawPanel::clearNow() {
-    std::cout << "clearNow" << std::endl;
+    DEBUG("clearNow");
     shouldDraw = false;
     paintNow();
 }
 
 DrawPanel::~DrawPanel() {
-    std::cout << "DrawPanel destructor" << std::endl;
+    DEBUG("DrawPanel destructor");
 }
