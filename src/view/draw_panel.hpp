@@ -7,12 +7,14 @@
 #endif
 
 #include "config.hpp"
+#include "draw_base_element.hpp"
 #include "line_cutter.hpp"
 
 namespace cg {
 class DrawPanel : public wxPanel {
     private:
-        cg::Config config;
+        bool is_cutter_visible;
+        std::vector<cg::DrawBaseElement*> elements;
         int width, height;
         void paintEvent(wxPaintEvent& evt);
         void sizeEvent(wxSizeEvent& evt);
@@ -24,12 +26,11 @@ class DrawPanel : public wxPanel {
 
     public:
         DrawPanel(wxFrame* parent);
-        void setConfig(const Config& config);
-        void setConfig(Config&& config);
         void setDrawOption(const DrawOptions option);
         void paintNow();
 
-        cg::Config& getConfig();
+        void setCutterVisibility(const bool is_visible);
+        std::vector<cg::DrawBaseElement*>& getElements();
 
         ~DrawPanel();
 

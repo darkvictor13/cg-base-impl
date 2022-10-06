@@ -17,5 +17,6 @@ class DrawBaseElement {
 
     public:
         virtual void draw(wxDC &dc) = 0;
+        virtual ~DrawBaseElement() = default;
 };
 };  // namespace cg

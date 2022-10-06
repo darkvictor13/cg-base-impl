@@ -1,6 +1,12 @@
 #include "my_frame.hpp"
 
+#include <sstream>
+
+#include "circle.hpp"
+#include "line.hpp"
 #include "line_cutter.hpp"
+#include "polygon.hpp"
+#include "rectangle.hpp"
 
 using namespace cg;
 
@@ -86,40 +92,76 @@ MyFrame::MyFrame()
 }
 
 void MyFrame::drawLine(wxCommandEvent& event) {
-    auto& config_ref = drawPanel->getConfig();
-    config_ref.draw_option = cg::DrawOptions::DRAW_LINE;
+    cg::point_t p1, p2;
+    wxTextEntryDialog* dialog = new wxTextEntryDialog(
+        this, wxT("Digite o ponto inicial da reta (x,y):"), "Ponto", "(0,0)");
+    if (dialog->ShowModal() == wxID_OK) {
+        wxString value = dialog->GetValue();
+        p1 = parsePoint(value.ToStdString());
+    }
+    delete dialog;
+    dialog = new wxTextEntryDialog(
+        this, wxT("Digite o ponto final da reta (x,y):"), "Ponto", "(100,100)");
+    if (dialog->ShowModal() == wxID_OK) {
+        wxString value = dialog->GetValue();
+        p2 = parsePoint(value.ToStdString());
+    }
+    delete dialog;
+    drawPanel->getElements().push_back(new cg::Line(p1, p2));
     drawPanel->paintNow();
     drawPanel->Refresh(false);
 }
 
 void MyFrame::drawCircle(wxCommandEvent& event) {
-    auto& config_ref = drawPanel->getConfig();
-    config_ref.draw_option = cg::DrawOptions::DRAW_CIRCLE;
-    drawPanel->paintNow();
-    drawPanel->Refresh(false);
+    cg::point_t center = {0, 0};
+    auto dialog =
+        wxTextEntryDialog(this, wxT("Digite o contro da circunferência (x,y):"),
+                          "Ponto", "(0,0)");
+    if (dialog.ShowModal() == wxID_OK) {
+        wxString value = dialog.GetValue();
+        center = parsePoint(value.ToStdString());
+    }
+    auto dialog_radius = wxTextEntryDialog(
+        this, wxT("Digite o raio da circunferência:"), "Raio", "100");
+    if (dialog_radius.ShowModal() == wxID_OK) {
+        wxString value = dialog_radius.GetValue();
+        auto radius = std::stof(value.ToStdString());
+        drawPanel->getElements().push_back(new cg::Circle(center, radius));
+        drawPanel->paintNow();
+        drawPanel->Refresh(false);
+    }
 }
 
 void MyFrame::drawPolygon(wxCommandEvent& event) {
-    auto& config_ref = drawPanel->getConfig();
-    config_ref.draw_option = cg::DrawOptions::DRAW_POLYGON;
+    auto dialog = wxTextEntryDialog(
+        this, wxT("Digite os pontos do polígono (x,y):"), "Ponto",
+        "(0,0)\n(100, 100)", wxOK | wxCANCEL | wxTE_MULTILINE);
+    if (dialog.ShowModal() == wxID_OK) {
+        auto lines = dialog.GetValue().ToStdString();
+        std::vector<cg::point_t> points;
+        std::stringstream ss(lines);
+        std::string line;
+        while (std::getline(ss, line)) {
+            points.push_back(parsePoint(line));
+        }
+        drawPanel->getElements().push_back(new cg::Polygon(points));
+    }
     drawPanel->paintNow();
     drawPanel->Refresh(false);
 }
 
 void MyFrame::drawCutArea(wxCommandEvent& event) {
-    auto& config_ref = drawPanel->getConfig();
-    if (config_ref.draw_option == cg::DrawOptions::DRAW_CLEAR) {
-        config_ref.draw_option = cg::DrawOptions::DRAW_NONE;
-    }
-    config_ref.is_cutter_visible = true;
+    drawPanel->setCutterVisibility(true);
     drawPanel->paintNow();
     drawPanel->Refresh(false);
 }
 
 void MyFrame::drawClear(wxCommandEvent& event) {
-    auto& config_ref = drawPanel->getConfig();
-    config_ref.is_cutter_visible = false;
-    config_ref.draw_option = cg::DrawOptions::DRAW_CLEAR;
+    auto& elements = drawPanel->getElements();
+    for (auto& element : elements) {
+        delete element;
+    }
+    elements.clear();
     drawPanel->paintNow();
     drawPanel->Refresh(false);
 }
@@ -143,6 +185,7 @@ void MyFrame::setCutArea(wxCommandEvent& event) {
         point_max = parsePoint(value.ToStdString());
         std::cout << "Ponto maximo: " << point_max << '\n';
     }
+    delete dialog;
     cg::LineCutter::getInstance().setLimits(point_min, point_max);
     drawCutArea(event);
 }
