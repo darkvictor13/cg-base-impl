@@ -8,13 +8,34 @@
 
 #include "draw_panel.hpp"
 
-enum { ID_HELLO = 1, ID_PAINT_PANEL, ID_CLEAR_PANEL, ID_PAINT };
+enum {
+    ID_HELLO = 1,
+    ID_SET_CUT_AREA,
+    ID_PAINT_PANEL,
+    ID_CLEAR_PANEL,
+    ID_UPDATE_PANEL,
+    ID_DRAW_CIRCLE,
+    ID_DRAW_LINE,
+    ID_DRAW_POLYGON,
+    ID_DRAW_CUT_LINE_AREA,
+};
 
+namespace cg {
 class MyFrame : public wxFrame {
-    private:
-        DrawPanel* drawPanel;
-        wxBoxSizer *sizer;
-
     public:
         MyFrame();
+
+    private:
+        DrawPanel *drawPanel;
+        wxBoxSizer *sizer;
+
+    private:
+        void drawLine(wxCommandEvent &event);
+        void drawCircle(wxCommandEvent &event);
+        void drawPolygon(wxCommandEvent &event);
+        void drawCutArea(wxCommandEvent &event);
+        void drawClear(wxCommandEvent &event);
+
+        void setCutArea(wxCommandEvent &event);
 };
+};  // namespace cg

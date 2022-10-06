@@ -3,7 +3,7 @@
 class MyApp : public wxApp {
     public:
         virtual bool OnInit() override {
-            auto frame = new MyFrame();
+            auto frame = new cg::MyFrame();
             frame->Show(true);
             return true;
         }

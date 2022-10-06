@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++17 -O2 -Wall -Wextra -I ../include
+CXXFLAGS=-std=c++17 -O2 -Wall -Wextra -I ../include -I ../src -I ../src/view -I ../src/draw_elements
 #-fsanitize=address -pedantic
 #LDFLAGS=-fsanitize=address
 LIBFLAGS=-lm

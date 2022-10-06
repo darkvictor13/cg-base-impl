@@ -1,6 +1,9 @@
 #include "draw_panel.hpp"
 
 #include "debug.hpp"
+#include "line.hpp"
+
+using namespace cg;
 
 BEGIN_EVENT_TABLE(DrawPanel, wxPanel)
 EVT_PAINT(DrawPanel::paintEvent)
@@ -28,55 +31,38 @@ void DrawPanel::render(wxDC& dc) {
         height = new_height;
     }
 
-    if (shouldDraw) {
-        myDraw(dc);
-    } else {
-        clear(dc);
+    if (config.is_cutter_visible) {
+        const auto& cutter = LineCutter::getInstance();
+        const auto height = cutter.MAX_Y - cutter.MIN_Y;
+        const auto width = cutter.MAX_X - cutter.MIN_X;
+        dc.DrawRectangle(cutter.MIN_X, cutter.MIN_Y, width, height);
     }
-}
 
-void DrawPanel::myDraw(wxDC& dc) {
-    DEBUG("myDraw");
-
-    const int mid_x = width / 2;
-    const int one_third_y = height / 3;
-    const int head_radius = one_third_y / 4;
-
-    dc.SetBrush(*wxWHITE_BRUSH);
-    dc.SetPen({wxColour(0, 0, 0), 1});
-
-    // Draw the head
-    dc.DrawCircle(mid_x, one_third_y - head_radius, head_radius);
-
-    // Draw the eyes
-    dc.DrawCircle(mid_x - head_radius / 3, one_third_y - head_radius,
-                  head_radius / 4);
-    dc.DrawCircle(mid_x + head_radius / 3, one_third_y - head_radius,
-                  head_radius / 4);
-
-    // Draw the eyeballs
-    dc.SetBrush(*wxBLACK_BRUSH);
-    dc.DrawCircle(mid_x - head_radius / 3, one_third_y - head_radius,
-                  head_radius / 8);
-    dc.DrawCircle(mid_x + head_radius / 3, one_third_y - head_radius,
-                  head_radius / 8);
-
-    // Draw the mouth
-    dc.DrawLine(mid_x - head_radius / 3, one_third_y - head_radius / 2,
-                mid_x + head_radius / 3, one_third_y - head_radius / 2);
-
-    // draw the body
-    dc.DrawLine(mid_x, one_third_y, mid_x, height - one_third_y);
-
-    // draw the legs
-    dc.DrawLine(mid_x, height - one_third_y, mid_x - one_third_y / 2, height);
-    dc.DrawLine(mid_x, height - one_third_y, mid_x + one_third_y / 2, height);
-
-    // draw the arms
-    dc.DrawLine(mid_x, one_third_y, mid_x - one_third_y / 2,
-                one_third_y + one_third_y / 2);
-    dc.DrawLine(mid_x, one_third_y, mid_x + one_third_y / 2,
-                one_third_y + one_third_y / 2);
+    wxPointList points;
+    switch (config.draw_option) {
+        case DrawOptions::DRAW_CIRCLE:
+            dc.DrawCircle(100, 100, 50);
+            break;
+        case DrawOptions::DRAW_LINE:
+            dc.DrawLine(0, 0, width, height);
+            break;
+        case DrawOptions::DRAW_POLYGON:
+            points.Append(new wxPoint(0, 0));
+            points.Append(new wxPoint(width / 2, 0));
+            points.Append(new wxPoint(width / 2, height / 2));
+            points.Append(new wxPoint(0, height / 2));
+            dc.DrawPolygon(&points);
+            break;
+        case DrawOptions::DRAW_NONE:
+            break;
+        case DrawOptions::DRAW_CLEAR:
+            clear(dc);
+            break;
+        default:
+            break;
+    }
+    cg::Line line({0, 0}, {width, height});
+    line.draw(dc);
 }
 
 void DrawPanel::clear(wxDC& dc) {
@@ -85,8 +71,23 @@ void DrawPanel::clear(wxDC& dc) {
     dc.Clear();
 }
 
-DrawPanel::DrawPanel(wxFrame* parent) : wxPanel(parent), shouldDraw(false) {
+DrawPanel::DrawPanel(wxFrame* parent) : wxPanel(parent), config() {
     DEBUG("DrawPanel");
+}
+
+void DrawPanel::setConfig(const Config& config) {
+    DEBUG("setConfig");
+    this->config = config;
+}
+
+void DrawPanel::setConfig(Config&& config) {
+    DEBUG("setConfig");
+    this->config = std::move(config);
+}
+
+void DrawPanel::setDrawOption(const DrawOptions option) {
+    DEBUG("setDrawOption");
+    config.draw_option = option;
 }
 
 void DrawPanel::paintNow() {
@@ -95,16 +96,8 @@ void DrawPanel::paintNow() {
     render(dc);
 }
 
-void DrawPanel::drawNow() {
-    DEBUG("drawNow");
-    shouldDraw = true;
-    paintNow();
-}
-
-void DrawPanel::clearNow() {
-    DEBUG("clearNow");
-    shouldDraw = false;
-    paintNow();
+Config& DrawPanel::getConfig() {
+    return config;
 }
 
 DrawPanel::~DrawPanel() {
