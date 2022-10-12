@@ -150,7 +150,7 @@ void MyFrame::drawCircle(wxCommandEvent& event) {
     float radius = 100.0;
     cg::point_t center = {0, 0};
     auto dialog =
-        wxTextEntryDialog(this, wxT("Digite o contro da circunferência (x,y):"),
+        wxTextEntryDialog(this, wxT("Digite o centro da circunferência (x,y):"),
                           "Ponto", "(0,0)");
     if (dialog.ShowModal() == wxID_OK) {
         wxString value = dialog.GetValue();
