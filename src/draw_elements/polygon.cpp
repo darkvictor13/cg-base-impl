@@ -46,7 +46,7 @@ AET *novoAET(const point_t &p1, const point_t &p2, ET* listPolygon){
     
     AET *novo = (AET*)malloc(sizeof(AET));
     
-    //pegar reta (aresta por Bresenham) e pegar o inc
+    //usar o algoritmo de Bresenham
     auto [x1, y1] = static_cast<int_point_t>(p1);
     auto [x2, y2] = static_cast<int_point_t>(p2);
 
@@ -75,6 +75,12 @@ ET *insere (AET* aresta, ET* listPolygon){
         } else{
             listPolygon->prox = aresta;
         }
-            
+   
+    }
+}
+
+ET *remove (ET* listPolygon){
+    if(listPolygon!=NULL){
+        listPolygon = listPolygon->prox;
     }
 }
