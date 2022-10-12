@@ -4,7 +4,7 @@
 
 using namespace cg;
 
-void reta_pos(wxDC &dc, int_point_t &x1, int_point_t &y1, int_point_t &x2, int_point_t
+void reta_pos(wxDC &dc, const int_point_t &x1, const int_point_t &y1, const int_point_t &x2, const int_point_t
 &y2, int16_t dx, int16_t dy){
 
     int16_t incNE, incE, d;
@@ -50,7 +50,7 @@ void reta_pos(wxDC &dc, int_point_t &x1, int_point_t &y1, int_point_t &x2, int_p
     }
 }
 
-void reta_neg(wxDC &dc, int_point_t &x1, int_point_t &y1, int_point_t &x2, int_point_t
+void reta_neg(wxDC &dc, const int_point_t &x1, const int_point_t &y1, const int_point_t &x2, const int_point_t
 &y2, int16_t dx, int16_t dy){
 
     int16_t incNE, incE, d;
