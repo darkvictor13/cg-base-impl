@@ -24,8 +24,8 @@ class Polygon : public DrawBaseElement {
 
     private:
         // estruturas aet e et para o algoritmo de preenchimento
-        
-        typedef struct listaAET AET;
+
+        //typedef struct listaAET AET;
         
         struct listaAET
         {
@@ -39,8 +39,8 @@ class Polygon : public DrawBaseElement {
 
         struct listaET
         {
-            AET* prox;
-            //int16_t size;
+            AET* aresta;
+            int16_t p; //posição
         };
 
 };

@@ -37,8 +37,7 @@ void Polygon::draw(wxDC &dc) {
 }
 
 void ET::ET(){
-    head = NULL;
-    size = 0;
+    p = 0;
 }
 */
 
@@ -66,21 +65,12 @@ AET *novoAET(const point_t &p1, const point_t &p2, ET* listPolygon){
 }
 
 ET *insere (AET* aresta, ET* listPolygon){
-    if(listPolygon == NULL){
-        listPolygon = aresta;
-        aresta->prox = NULL;
-    } else{
-        if(listPolygon->x > aresta->x){
-            aresta->prox = listPolygon;
-        } else{
-            listPolygon->prox = aresta;
-        }
-   
-    }
+        listPolygon.insert(aresta, aresta->x);
+        //ordenar por x
 }
 
-ET *remove (ET* listPolygon){
-    if(listPolygon!=NULL){
-        listPolygon = listPolygon->prox;
+ET *remove (ET* listPolygon, AET* aresta){
+    if(!empty(listPolygon)){
+        listPolygon.remove(aresta);
     }
 }
