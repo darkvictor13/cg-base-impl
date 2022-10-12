@@ -1,5 +1,7 @@
 #include "my_frame.hpp"
 
+#include <wx/colordlg.h>
+
 #include <sstream>
 
 #include "circle.hpp"
@@ -23,6 +25,7 @@ MyFrame::MyFrame()
 
     wxMenu* menuHelp = new wxMenu;
     menuHelp->Append(wxID_ABOUT);
+    menuHelp->Append(ID_GET_PANEL_SIZE, wxT("Obter tamanho do painel"));
 
     wxMenu* menuPaint = new wxMenu;
     menuPaint->Append(ID_PAINT_PANEL, "&Atualizar",
@@ -59,6 +62,17 @@ MyFrame::MyFrame()
                          "About Hello World", wxOK | wxICON_INFORMATION);
         },
         wxID_ABOUT);
+
+    Bind(
+        wxEVT_MENU,
+        [=](wxCommandEvent&) {
+            std::stringstream ss;
+            const wxSize& size = drawPanel->GetSize();
+            ss << "Tamanho do painel: " << size.x << "x" << size.y;
+            wxMessageBox(wxString(ss.str()), "Tamanho do painel",
+                         wxOK | wxICON_INFORMATION);
+        },
+        ID_GET_PANEL_SIZE);
 
     Bind(
         wxEVT_MENU,
@@ -107,12 +121,33 @@ void MyFrame::drawLine(wxCommandEvent& event) {
         p2 = parsePoint(value.ToStdString());
     }
     delete dialog;
-    drawPanel->getElements().push_back(new cg::Line(p1, p2));
+    wxMessageDialog* dialog2 = new wxMessageDialog(
+        this, wxT("Deseja que a reta fique dentro da área de corte?"), "Ponto",
+        wxYES_NO);
+    if (dialog2->ShowModal() == wxID_YES) {
+        drawPanel->setCutterVisibility(true);
+        auto& cutter = LineCutter::getInstance();
+        if (cutter.notInitialized()) {
+            wxMessageBox(wxT("A área de corte não foi definida!"), "Erro",
+                         wxOK | wxICON_ERROR);
+            return;
+        }
+        if (!cutter.cohenSutherland(p1, p2)) {
+            wxMessageBox(wxT("A reta não está dentro da área de corte, "
+                             "portanto não será desenhada!"),
+                         "Warning", wxOK | wxICON_WARNING);
+            return;
+        }
+    }
+
+    auto color = wxGetColourFromUser(this, *wxBLACK);
+    drawPanel->getElements().push_back(new cg::Line(p1, p2, color));
     drawPanel->paintNow();
     // drawPanel->Refresh(false);
 }
 
 void MyFrame::drawCircle(wxCommandEvent& event) {
+    float radius = 100.0;
     cg::point_t center = {0, 0};
     auto dialog =
         wxTextEntryDialog(this, wxT("Digite o contro da circunferência (x,y):"),
@@ -125,17 +160,20 @@ void MyFrame::drawCircle(wxCommandEvent& event) {
         this, wxT("Digite o raio da circunferência:"), "Raio", "100");
     if (dialog_radius.ShowModal() == wxID_OK) {
         wxString value = dialog_radius.GetValue();
-        auto radius = std::stof(value.ToStdString());
-        drawPanel->getElements().push_back(new cg::Circle(center, radius));
-        drawPanel->paintNow();
-        drawPanel->Refresh(false);
+        radius = std::stof(value.ToStdString());
     }
+
+    auto color = wxGetColourFromUser(this, *wxBLACK);
+
+    drawPanel->getElements().push_back(new cg::Circle(center, radius, color));
+    drawPanel->paintNow();
+    drawPanel->Refresh(false);
 }
 
 void MyFrame::drawPolygon(wxCommandEvent& event) {
     auto dialog = wxTextEntryDialog(
         this, wxT("Digite os pontos do polígono (x,y):"), "Ponto",
-        "(0,0)\n(100, 100)", wxOK | wxCANCEL | wxTE_MULTILINE);
+        "(0,0)\n(100,0)\n(100, 100)", wxOK | wxCANCEL | wxTE_MULTILINE);
     if (dialog.ShowModal() == wxID_OK) {
         auto lines = dialog.GetValue().ToStdString();
         std::vector<cg::point_t> points;
@@ -168,6 +206,7 @@ void MyFrame::drawClear(wxCommandEvent& event) {
 }
 
 void MyFrame::setCutArea(wxCommandEvent& event) {
+    const wxSize max_limits = drawPanel->GetSize();
     cg::point_t point_min, point_max;
     wxTextEntryDialog* dialog = new wxTextEntryDialog(
         this, wxT("Digite o ponto mínimo da area de corte (x,y):"), "Ponto",
@@ -175,15 +214,21 @@ void MyFrame::setCutArea(wxCommandEvent& event) {
     if (dialog->ShowModal() == wxID_OK) {
         wxString value = dialog->GetValue();
         point_min = parsePoint(value.ToStdString());
+        point_min = {std::max(0.0f, point_min.first),
+                     std::max(0.0f, point_min.second)};
         std::cout << "Ponto minimo: " << point_min << '\n';
     }
     delete dialog;
     dialog = new wxTextEntryDialog(
         this, wxT("Digite o ponto máximo da area de corte (x,y):"), "Ponto",
-        "(0,0)");
+        "(100,100)");
     if (dialog->ShowModal() == wxID_OK) {
         wxString value = dialog->GetValue();
         point_max = parsePoint(value.ToStdString());
+        point_max = {std::min(static_cast<float>(max_limits.GetWidth()),
+                              point_max.first),
+                     std::min(static_cast<float>(max_limits.GetHeight()),
+                              point_max.second)};
         std::cout << "Ponto maximo: " << point_max << '\n';
     }
     delete dialog;

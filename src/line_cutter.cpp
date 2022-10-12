@@ -1,8 +1,12 @@
 #include "line_cutter.hpp"
 
+#include <limits>
+
 #include "debug.hpp"
 
 using namespace cg;
+
+static constexpr int16_t MAX_UINT_16 = std::numeric_limits<uint16_t>::max();
 
 LineCutter &LineCutter::getInstance() {
     static LineCutter instance;
@@ -72,11 +76,17 @@ void LineCutter::setLimits(const point_t min, point_t max) {
     MAX_Y = static_cast<uint16_t>(max.second);
 }
 
+bool LineCutter::notInitialized() const {
+    return MAX_X == MAX_UINT_16 && MIN_X == 0 && MAX_Y == MAX_UINT_16 &&
+           MIN_Y == 0;
+}
+
 LineCutter::~LineCutter() {
     DEBUG("LineCutter destructor");
 }
 
-LineCutter::LineCutter() : MAX_X(0), MIN_X(0), MAX_Y(0), MIN_Y(0) {
+LineCutter::LineCutter()
+    : MAX_X(0), MIN_X(0), MAX_Y(MAX_UINT_16), MIN_Y(MAX_UINT_16) {
     DEBUG("LineCutter()");
 }
 

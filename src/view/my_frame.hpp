@@ -10,6 +10,7 @@
 
 enum {
     ID_HELLO = 1,
+    ID_GET_PANEL_SIZE,
     ID_SET_CUT_AREA,
     ID_PAINT_PANEL,
     ID_CLEAR_PANEL,

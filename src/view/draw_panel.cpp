@@ -2,6 +2,7 @@
 
 #include "debug.hpp"
 #include "line.hpp"
+#include "rectangle.hpp"
 
 using namespace cg;
 
@@ -33,9 +34,9 @@ void DrawPanel::render(wxDC& dc) {
 
     if (is_cutter_visible) {
         const auto& cutter = LineCutter::getInstance();
-        const auto height = cutter.MAX_Y - cutter.MIN_Y;
-        const auto width = cutter.MAX_X - cutter.MIN_X;
-        dc.DrawRectangle(cutter.MIN_X, cutter.MIN_Y, width, height);
+        cg::Rectangle rect({cutter.MIN_X, cutter.MIN_Y},
+                           {cutter.MAX_X, cutter.MAX_Y});
+        rect.draw(dc);
     }
 
     for (auto& element : elements) {

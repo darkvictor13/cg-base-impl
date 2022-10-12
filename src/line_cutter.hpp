@@ -8,6 +8,7 @@ enum Positions { LEFT, RIGHT, BOTTOM, TOP };
 
 class LineCutter {
         friend class DrawPanel;
+        friend class MyFrame;
 
     public:
         static LineCutter &getInstance();
@@ -25,6 +26,7 @@ class LineCutter {
          */
         bool cohenSutherland(point_t &p1, point_t &p2);
         void setLimits(const point_t min, point_t max);
+        bool notInitialized() const;
         ~LineCutter();
 
     private:
