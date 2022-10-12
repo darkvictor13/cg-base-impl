@@ -70,6 +70,11 @@ ET *insere (AET* aresta, ET* listPolygon){
         listPolygon = aresta;
         aresta->prox = NULL;
     } else{
-        aresta->prox = listPolygon;
+        if(listPolygon->x > aresta->x){
+            aresta->prox = listPolygon;
+        } else{
+            listPolygon->prox = aresta;
+        }
+            
     }
 }
