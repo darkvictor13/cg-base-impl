@@ -29,3 +29,47 @@ void Polygon::draw(wxDC &dc) {
     }
     dc.DrawPolygon(size, wx_points);
 }
+
+/*void AET::AET(){
+    ymax = 0;
+    x = 0;
+    inc = 0;
+}
+
+void ET::ET(){
+    head = NULL;
+    size = 0;
+}
+*/
+
+AET *novoAET(const point_t &p1, const point_t &p2, ET* listPolygon){
+    
+    AET *novo = (AET*)malloc(sizeof(AET));
+    
+    //pegar reta (aresta por Bresenham) e pegar o inc
+    auto [x1, y1] = static_cast<int_point_t>(p1);
+    auto [x2, y2] = static_cast<int_point_t>(p2);
+
+    if(y1 > y2){
+        novo->ymax = y1;
+        novo->x = x2;
+    } else{
+        novo->ymax = y2;
+        novo->x = x1;
+    }
+
+    novo->prox = NULL;
+    ET = insere(novo, listPolygon);
+    
+    return novo;
+
+}
+
+ET *insere (AET* aresta, ET* listPolygon){
+    if(listPolygon == NULL){
+        listPolygon = aresta;
+        aresta->prox = NULL;
+    } else{
+        aresta->prox = listPolygon;
+    }
+}

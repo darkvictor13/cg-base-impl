@@ -39,8 +39,8 @@ class Polygon : public DrawBaseElement {
 
         struct listaET
         {
-            AET* aresta;
-            ET* prox;
+            AET* prox;
+            //int16_t size;
         };
 
 };
