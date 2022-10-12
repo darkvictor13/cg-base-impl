@@ -67,10 +67,12 @@ AET *novoAET(const point_t &p1, const point_t &p2, ET* listPolygon){
 ET *insere (AET* aresta, ET* listPolygon){
         listPolygon.insert(aresta, aresta->x);
         //ordenar por x
+        //ordenar com Edge
 }
 
 ET *remove (ET* listPolygon, AET* aresta){
     if(!empty(listPolygon)){
         listPolygon.remove(aresta);
+        //ordenar com Edge
     }
 }
