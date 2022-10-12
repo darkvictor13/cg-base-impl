@@ -58,7 +58,7 @@ AET *novoAET(const point_t &p1, const point_t &p2, ET* listPolygon){
     }
 
     novo->prox = NULL;
-    ET = insere(novo, listPolygon);
+    insere(novo, listPolygon);
     
     return novo;
 
