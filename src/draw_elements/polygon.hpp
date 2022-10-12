@@ -25,7 +25,9 @@ class Polygon : public DrawBaseElement {
     private:
         // estruturas aet e et para o algoritmo de preenchimento
 
-        //typedef struct listaAET AET;
+        //usar Bresenham para desenhar cada reta
+
+        typedef struct listaAET AET;
         
         struct listaAET
         {
