@@ -16,6 +16,9 @@ class DrawBaseElement {
         wxColour color;
 
     public:
+        DrawBaseElement(const wxColour &color = wxColour(255, 255, 255))
+            : points(), color(color){};
+
         virtual void draw(wxDC &dc) = 0;
         virtual ~DrawBaseElement() = default;
 };

@@ -2,9 +2,9 @@
 
 using namespace cg;
 
-Polygon::Polygon(const std::vector<point_t> &points) {
+Polygon::Polygon(const std::vector<point_t> &points, const wxColour &color)
+    : DrawBaseElement(color) {
     this->points = points;
-    this->color = wxColour(0, 0, 0);
 }
 
 Polygon::~Polygon() {

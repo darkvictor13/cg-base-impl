@@ -109,7 +109,7 @@ void MyFrame::drawLine(wxCommandEvent& event) {
     delete dialog;
     drawPanel->getElements().push_back(new cg::Line(p1, p2));
     drawPanel->paintNow();
-    drawPanel->Refresh(false);
+    // drawPanel->Refresh(false);
 }
 
 void MyFrame::drawCircle(wxCommandEvent& event) {
@@ -162,6 +162,7 @@ void MyFrame::drawClear(wxCommandEvent& event) {
         delete element;
     }
     elements.clear();
+    drawPanel->setCutterVisibility(false);
     drawPanel->paintNow();
     drawPanel->Refresh(false);
 }

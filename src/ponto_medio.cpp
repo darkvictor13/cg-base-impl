@@ -1,8 +1,10 @@
 #include "ponto_medio.hpp"
+
 #include "debug.hpp"
 
 using namespace cg;
 
+/*
 void PontoMedio::write_pixel(x, y){
     // coloca a cor que vai pintar o pixel também?
 
@@ -21,10 +23,12 @@ void PontoMedio::write_circle(x, y){
     write_pixel(-y, -x);
 }
 
-// caminho: reta ou circunferência (nova função ou arquivos separados para cada?)
+// caminho: reta ou circunferência (nova função ou arquivos separados para
+cada?)
 
-void PontoMedio::BresenhamReta (point_t &x1, point_t &y1, point_t &x2, point_t &y2){
-    
+void PontoMedio::BresenhamReta (point_t &x1, point_t &y1, point_t &x2, point_t
+&y2){
+
     int dx, dy, incNE, incE, x, y, d;
 
     dx = x2 - x1;
@@ -32,7 +36,7 @@ void PontoMedio::BresenhamReta (point_t &x1, point_t &y1, point_t &x2, point_t &
 
     d = 2 * dy - dx;
 
-    incE = 2 * dy; 
+    incE = 2 * dy;
     incNE = 2 * (dy - dx);
 
     x = x1;
@@ -54,7 +58,7 @@ void PontoMedio::BresenhamReta (point_t &x1, point_t &y1, point_t &x2, point_t &
         }
     }
 
-} 
+}
 
 void PontoMedio::BresenhamCircun (int &r){
 
@@ -73,9 +77,10 @@ void PontoMedio::BresenhamCircun (int &r){
             x++;
         } else{
             h = h + 2*(x - y) + 5;
-            x++; 
+            x++;
             y++;
         }
         write_circle(x, y);
     }
 }
+*/
