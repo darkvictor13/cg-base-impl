@@ -4,100 +4,17 @@
 
 using namespace cg;
 
-void reta_pos(wxDC &dc, const int_point_t &x1, const int_point_t &y1, const int_point_t &x2, const int_point_t
-&y2, int16_t dx, int16_t dy){
-
-    int16_t incNE, incE, d;
-
-    if(dx > dy){
-        d = 2 * dy - dx;
-
-        incE = 2 * dy;
-        incNE = 2 * (dy - dx);
-
-        dc.DrawPoint(x,y);
-
-        while(x < x2){
-            if(d <= 0){
-                d += incE;
-                x++;
-            } else {
-                d += incNE;
-                x++;
-                y++;
-            }
-            dc.DrawPoint(x,y);
-        }
-    } else{
-        d = 2 * dx - dy;
-
-        incE = 2 * dx;
-        incNE = 2 * (dx - dy);
-
-        dc.DrawPoint(x,y);
-
-        while(y < y2){
-            if(d <= 0){
-                d += incE;
-                y++;
-            } else {
-                d += incNE;
-                x++;
-                y++;
-            }
-            dc.DrawPoint(x,y);
-        }
-    }
-}
-
-void reta_neg(wxDC &dc, const int_point_t &x1, const int_point_t &y1, const int_point_t &x2, const int_point_t
-&y2, int16_t dx, int16_t dy){
-
-    int16_t incNE, incE, d;
-
-    dx = abs(x2 - x1);
-    dy = abs(y2 - y1);
-
-    x = x1;
-    y = y1;
-
-    if(dx > dy){
-        d = 2 * dy - dx;
-
-        incE = 2 * dy;
-        incNE = 2 * (dy - dx);
-
-        dc.DrawPoint(x,y);
-
-        while(x > x2){
-            if(d <= 0){
-                d += incE;
-                x--;
-            } else {
-                d += incNE;
-                x--;
-                y++;
-            }
-            dc.DrawPoint(x,y);
-        }
-    } else{
-        d = 2 * dx - dy;
-
-        incE = 2 * dx;
-        incNE = 2 * (dx - dy);
-
-        dc.DrawPoint(x,y);
-
-        while(y < y2){
-            if(d <= 0){
-                d += incE;
-                y++;
-            } else {
-                d += incNE;
-                x--;
-                y++;
-            }
-            dc.DrawPoint(x,y);
+void bresenham_base(wxDC &dc, uint16_t x1, uint16_t y1, uint16_t x2,
+                    uint16_t y2, uint16_t dx, uint16_t dy) {
+    int d = 2 * dy - dx;
+    for (int i = 0; i <= dx; i++) {
+        dc.DrawPoint(x1, y1);
+        x1 < x2 ? x1++ : x1--;
+        if (d < 0) {
+            d += (2 * dy);
+        } else {
+            y1 < y2 ? y1++ : y1--;
+            d += (2 * dy - 2 * dx);
         }
     }
 }
@@ -113,15 +30,11 @@ void writeLineBresenham(wxDC &dc, const point_t &initial,
     dx = abs(x2 - x1);
     dy = abs(y2 - y1);
 
-    x = x1;
-    y = y1;
-
-    if(y2 > y1){
-        reta_pos(dc, x1, y1, x2, y2, dx, dy);
-    } else{
-        reta_neg(dc, x1, y1, x2, y2, dx, dy);
+    if (dx > dy) {
+        bresenham_base(dc, x1, y1, x2, y2, dx, dy);
+    } else {
+        bresenham_base(dc, y1, x1, y2, x2, dy, dx);
     }
-
 }
 
 Line::Line(const point_t &p1, const point_t &p2, const wxColour &color)
