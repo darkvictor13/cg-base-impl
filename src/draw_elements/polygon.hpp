@@ -10,6 +10,11 @@ struct Edge {
 
         Edge(int y_max, int x, double inc) : y_max(y_max), x(x), inc(inc) {
         }
+        friend std::ostream &operator<<(std::ostream &os, const Edge &edge) {
+            os << "ymax: " << edge.y_max << " x: " << edge.x
+               << " inc: " << edge.inc;
+            return os;
+        }
 };
 
 class Polygon : public DrawBaseElement {

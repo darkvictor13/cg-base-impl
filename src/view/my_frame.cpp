@@ -171,19 +171,20 @@ void MyFrame::drawCircle(wxCommandEvent& event) {
 }
 
 void MyFrame::drawPolygon(wxCommandEvent& event) {
+    std::vector<cg::point_t> points;
     auto dialog = wxTextEntryDialog(
         this, wxT("Digite os pontos do polígono (x,y):"), "Ponto",
         "(0,0)\n(100,0)\n(100, 100)", wxOK | wxCANCEL | wxTE_MULTILINE);
     if (dialog.ShowModal() == wxID_OK) {
         auto lines = dialog.GetValue().ToStdString();
-        std::vector<cg::point_t> points;
         std::stringstream ss(lines);
         std::string line;
         while (std::getline(ss, line)) {
             points.push_back(parsePoint(line));
         }
-        drawPanel->getElements().push_back(new cg::Polygon(points));
     }
+    auto color = wxGetColourFromUser(this, *wxBLACK);
+    drawPanel->getElements().push_back(new cg::Polygon(points, color));
     drawPanel->paintNow();
     drawPanel->Refresh(false);
 }
