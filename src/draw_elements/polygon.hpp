@@ -5,11 +5,11 @@
 namespace cg {
 
 struct Edge {
-        // pontos da aresta sempre ordenados pelo eixo y
-        point_t p1, p2;
+        int y_max, x;
+        double inc;
 
-        Edge() : p1(), p2(){};
-        Edge(const point_t &p1, const point_t &p2);
+        Edge(int y_max, int x, double inc) : y_max(y_max), x(x), inc(inc) {
+        }
 };
 
 class Polygon : public DrawBaseElement {
@@ -25,17 +25,22 @@ class Polygon : public DrawBaseElement {
     private:
         // estruturas aet e et para o algoritmo de preenchimento
 
-        //usar Bresenham para desenhar cada reta
+        // usar Bresenham para desenhar cada reta
+        //  lista de arestas AET
+        std::vector<Edge> aet;
+        // et
+        std::vector<std::vector<Edge>> et;
 
+        /*
         typedef struct listaAET AET;
-        
+
         struct listaAET
         {
             int16_t ymax;
             int16_t x;
             int16_t inc;
             AET* prox;
-        }; 
+        };
 
         typedef struct listaET ET;
 
@@ -44,6 +49,6 @@ class Polygon : public DrawBaseElement {
             AET* aresta;
             int16_t p; //posição
         };
-
+        */
 };
 };  // namespace cg
