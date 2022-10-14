@@ -5,8 +5,8 @@
 namespace cg {
 
 struct Edge {
-        int y_max, x;
-        double inc;
+        int y_max;
+        double x, inc;
 
         Edge(int y_max, int x, double inc) : y_max(y_max), x(x), inc(inc) {
         }
