@@ -23,12 +23,11 @@ void bresenham_base(wxDC &dc, uint16_t x1, uint16_t y1, uint16_t x2,
 // Precondition: p1 and p2 are in the same plane and p1 != p2 and p1 < p2
 void writeLineBresenham(wxDC &dc, const point_t &initial,
                         const point_t &final) {
-    int16_t dx, dy, incNE, incE, x, y, d;
-    auto [x1, y1] = static_cast<int_point_t>(initial);
-    auto [x2, y2] = static_cast<int_point_t>(final);
+    const auto [x1, y1] = static_cast<int_point_t>(initial);
+    const auto [x2, y2] = static_cast<int_point_t>(final);
 
-    dx = abs(x2 - x1);
-    dy = abs(y2 - y1);
+    const int16_t dx = abs(x2 - x1);
+    const int16_t dy = abs(y2 - y1);
 
     if (dx > dy) {
         bresenham_base(dc, x1, y1, x2, y2, dx, dy);

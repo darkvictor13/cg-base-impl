@@ -28,7 +28,8 @@ class Polygon : public DrawBaseElement {
         void criaLista();
 
     private:
-        // estruturas aet e et para o algoritmo de preenchimento
+        void insertEdge(const point_t &p1, const point_t &p2);
+        //  estruturas aet e et para o algoritmo de preenchimento
 
         // usar Bresenham para desenhar cada reta
         //  lista de arestas AET
