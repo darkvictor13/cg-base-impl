@@ -71,7 +71,7 @@ void Polygon::draw(wxDC &dc) {
         // Retira os lados que possuem y = ymax (Comentario da prof)
         // Nao sei se é para retirar por x
         for (auto it = aet.begin(); it != aet.end();) {
-            if (it->y_max == static_cast<int>(floor(it->x))) {
+            if (it->y_max == y) {
                 it = aet.erase(it);
             } else {
                 it++;
